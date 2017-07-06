@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd
+           http://www.springframework.org/schema/security/oauth2
+           http://www.springframework.org/schema/security/spring-security-oauth2.xsd
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <sec:http pattern="/api/v1/todos/**" create-session="stateless"
+                   entry-point-ref="oauth2AuthenticationEntryPoint">
+        <sec:access-denied-handler ref="oauth2AccessDeniedHandler"/>
+        <sec:csrf disabled="true"/>
+        <sec:expression-handler ref="oauth2ExpressionHandler"/>
+        <sec:intercept-url pattern="/**" method="GET"
+                                access="#oauth2.hasScope('READ')" />
+        <sec:intercept-url pattern="/**" method="POST"
+                                access="#oauth2.hasScope('WRITE')" />
+        <sec:custom-filter ref="oauth2AuthenticationFilter"
+                                before="PRE_AUTH_FILTER" />
+    </sec:http>
+    
+    <oauth2:web-expression-handler id="oauth2ExpressionHandler" />
+
+    <bean id="oauth2AccessDeniedHandler"
+              class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler" />
+
+    <bean id="oauth2AuthenticationEntryPoint"
+              class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint" />
+
+    <oauth2:resource-server id="oauth2AuthenticationFilter" resource-id="todoResource"
+              token-services-ref="tokenServices" entry-point-ref="oauth2AuthenticationEntryPoint" />
+
+</beans>
