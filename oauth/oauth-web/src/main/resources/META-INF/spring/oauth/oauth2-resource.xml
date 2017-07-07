@@ -16,7 +16,7 @@
         <sec:csrf disabled="true"/>
         <sec:expression-handler ref="oauth2ExpressionHandler"/>
         <sec:intercept-url pattern="/**" method="GET"
-                                access="#oauth2.hasScope('READ')" />
+                                access="#oauth2.hasScope('READ') and hasRole('READ')" />
         <sec:intercept-url pattern="/**" method="POST"
                                 access="#oauth2.hasScope('WRITE')" />
         <sec:custom-filter ref="oauth2AuthenticationFilter"
