@@ -8,6 +8,7 @@
     ">
 
     <sec:http pattern="/resources/**" security="none"/>
+    <sec:http pattern="/admin/**" security="none"/>
 
     <sec:http authentication-manager-ref="userLoginManager">
         <sec:form-login login-page="/login"
