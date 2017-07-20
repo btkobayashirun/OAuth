@@ -30,6 +30,7 @@
         authentication-manager-ref="clientAuthenticationManager">
         <sec:http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
         <sec:csrf disabled="true"/>
+        <sec:custom-filter ref="clientVerificationFilter" after="BASIC_AUTH_FILTER "/>
         <sec:intercept-url pattern="/**" access="isAuthenticated()"/>
     </sec:http>
     
@@ -42,6 +43,10 @@
     <bean id="oauthAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
         <property name="typeName" value="Basic" />
         <property name="realmName" value="Realm" />
+    </bean>
+    
+    <bean id="clientVerificationFilter" class="server.app.extension.AuthorizationCodeClientVerificationFilter">
+        <constructor-arg ref="dataSource" />
     </bean>
 
     <bean id="clientDetailsUserService"
