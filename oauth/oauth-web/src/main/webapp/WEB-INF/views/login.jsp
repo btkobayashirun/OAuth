@@ -21,5 +21,6 @@
         <td><input name="submit" type="submit" id="send" value="Login" /></td>
       </tr>
     </table>
+    <input type="hidden" id="onetimetoken" name="onetimetoken" value="${f:h(onetimetoken)}"/>
   </form:form>
 </div>

@@ -2,9 +2,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:sec="http://www.springframework.org/schema/security"
+    xmlns:aop="http://www.springframework.org/schema/aop"
     xsi:schemaLocation="
         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
     ">
 
     <sec:http pattern="/resources/**" security="none"/>
@@ -19,6 +21,7 @@
             delete-cookies="JSESSIONID" />
        <sec:access-denied-handler ref="accessDeniedHandler"/>
         <sec:custom-filter ref="userIdMDCPutFilter" after="ANONYMOUS_FILTER"/>
+        <sec:custom-filter ref="OneTimeTokenFilter" before="FORM_LOGIN_FILTER"/>
         <sec:session-management />
         <sec:intercept-url pattern="/login/**" access="permitAll" />
         <sec:intercept-url pattern="/oauth/**" access="isAuthenticated()" />
@@ -31,9 +34,16 @@
         </sec:authentication-provider>
     </sec:authentication-manager>
 
+ <!--    <bean id="oneTimeToken" class="server.domain.auth.model.OneTimeToken" scope="session">
+        <aop:scoped-proxy /> 
+    </bean> -->
+
     <bean id="userDetailsService"
         class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
         <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <bean id="OneTimeTokenFilter" class="server.app.extension.OneTimeTokenFilter">
     </bean>
 
     <!-- CSRF Protection -->
