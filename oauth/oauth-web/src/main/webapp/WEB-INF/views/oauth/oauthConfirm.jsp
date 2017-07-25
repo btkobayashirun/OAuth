@@ -17,6 +17,7 @@
             <label>
                 <input name='authorize' value='Authorize' type='submit'/>
             </label>
+            <input type="hidden" id="onetimetoken" name="onetimetoken" value="${f:h(onetimetoken)}"/>
         </form>
     </div>
 </body>
